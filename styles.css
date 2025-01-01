@@ -56,6 +56,14 @@ h1 {
 }
 
 /* main article section */
+section {
+  scroll-margin-left: 290px;
+}
+@media screen and (max-width: 890px) {
+  section {
+    scroll-margin-top: 300px;
+  }
+}
 main {
   width: 80vw;
   margin-left: 285px;
