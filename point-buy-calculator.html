@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Larsen's Point Buy Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #eef8ee;
+        color: #003300;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        min-height: 100vh;
+        padding-top: 20px;
+      }
+      .container {
+        background: #f6fff6;
+        border: 2px solid #66cc66;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 4px 8px rgba(0, 128, 0, 0.2);
+        margin-top: 20vh;
+      }
+      .suggestions {
+        background: inherit;
+        padding: 20px;
+        max-width: 400px;
+        width: 90%;
+        margin-top: 20px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .stat-row label {
+        flex: 1;
+        margin-right: 10px;
+      }
+      .stat-row select {
+        flex: 1;
+        padding: 5px;
+        border: 1px solid #66cc66;
+        border-radius: 4px;
+        background-color: #ffffff;
+        color: #003300;
+      }
+      .points {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .over-limit {
+        color: #cc0000;
+      }
+      .reset {
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 20px;
+        background-color: #66cc66;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .reset:hover {
+        background-color: #55aa55;
+      }
+      table {
+        width: 100%;
+        margin-top: 10px;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #66cc66;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #66cc66;
+        color: white;
+      }
+      .info-text {
+        font-size: 14px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Larsenwald's Point Buy Calculator</h1>
+      <p style="text-align: center">
+        Assign a number to each ability score. Do not let "Points Used" exceed
+        27.
+      </p>
+      <div class="stat-row">
+        <label for="str">Strength</label>
+        <select id="str" onchange="updatePoints()">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="stat-row">
+        <label for="dex">Dexterity</label>
+        <select id="dex" onchange="updatePoints()">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="stat-row">
+        <label for="con">Constitution</label>
+        <select id="con" onchange="updatePoints()">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="stat-row">
+        <label for="int">Intelligence</label>
+        <select id="int" onchange="updatePoints()">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="stat-row">
+        <label for="wis">Wisdom</label>
+        <select id="wis" onchange="updatePoints()">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="stat-row">
+        <label for="cha">Charisma</label>
+        <select id="cha" onchange="updatePoints()">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="points" id="pointsUsed">Points Used: 0 / 27</div>
+      <button class="reset" onclick="resetCalculator()">Reset</button>
+    </div>
+
+    <div class="suggestions">
+      <div class="info-text" style="font-size: 1rem">
+        Below is a table of recommended ability scores for each class using the
+        standard array.
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Str.</th>
+            <th>Dex.</th>
+            <th>Con.</th>
+            <th>Int.</th>
+            <th>Wis.</th>
+            <th>Cha.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Barbarian</td>
+            <td>15</td>
+            <td>13</td>
+            <td>14</td>
+            <td>10</td>
+            <td>12</td>
+            <td>8</td>
+          </tr>
+          <tr>
+            <td>Bard</td>
+            <td>8</td>
+            <td>14</td>
+            <td>12</td>
+            <td>13</td>
+            <td>10</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td>Cleric</td>
+            <td>14</td>
+            <td>8</td>
+            <td>13</td>
+            <td>10</td>
+            <td>15</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td>Druid</td>
+            <td>8</td>
+            <td>12</td>
+            <td>14</td>
+            <td>13</td>
+            <td>15</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>Fighter</td>
+            <td>15</td>
+            <td>14</td>
+            <td>13</td>
+            <td>8</td>
+            <td>10</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td>Monk</td>
+            <td>12</td>
+            <td>15</td>
+            <td>13</td>
+            <td>10</td>
+            <td>14</td>
+            <td>8</td>
+          </tr>
+          <tr>
+            <td>Paladin</td>
+            <td>15</td>
+            <td>10</td>
+            <td>13</td>
+            <td>8</td>
+            <td>12</td>
+            <td>14</td>
+          </tr>
+          <tr>
+            <td>Ranger</td>
+            <td>12</td>
+            <td>15</td>
+            <td>13</td>
+            <td>8</td>
+            <td>14</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>Rogue</td>
+            <td>12</td>
+            <td>15</td>
+            <td>13</td>
+            <td>14</td>
+            <td>10</td>
+            <td>8</td>
+          </tr>
+          <tr>
+            <td>Sorcerer</td>
+            <td>10</td>
+            <td>13</td>
+            <td>14</td>
+            <td>8</td>
+            <td>12</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td>Warlock</td>
+            <td>8</td>
+            <td>14</td>
+            <td>13</td>
+            <td>12</td>
+            <td>10</td>
+            <td>15</td>
+          </tr>
+          <tr>
+            <td>Wizard</td>
+            <td>8</td>
+            <td>12</td>
+            <td>13</td>
+            <td>15</td>
+            <td>14</td>
+            <td>10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Returns the point cost for a given score according to 5e point buy rules
+      function pointCost(score) {
+        switch (score) {
+          case 8:
+            return 0;
+          case 9:
+            return 1;
+          case 10:
+            return 2;
+          case 11:
+            return 3;
+          case 12:
+            return 4;
+          case 13:
+            return 5;
+          case 14:
+            return 7;
+          case 15:
+            return 9;
+          default:
+            return 0;
+        }
+      }
+
+      function updatePoints() {
+        const totalPoints = 27;
+        let abilityIds = ["str", "dex", "con", "int", "wis", "cha"];
+        let points = 0;
+
+        abilityIds.forEach(function (id) {
+          let scoreValue = parseInt(document.getElementById(id).value);
+          points += pointCost(scoreValue);
+        });
+
+        let display = document.getElementById("pointsUsed");
+        display.textContent = "Points Used: " + points + " / " + totalPoints;
+
+        if (points > totalPoints) {
+          display.classList.add("over-limit");
+        } else {
+          display.classList.remove("over-limit");
+        }
+      }
+
+      function resetCalculator() {
+        let abilityIds = ["str", "dex", "con", "int", "wis", "cha"];
+        abilityIds.forEach(function (id) {
+          document.getElementById(id).value = "8";
+        });
+        updatePoints();
+      }
+
+      window.onload = function () {
+        updatePoints();
+      };
+    </script>
+  </body>
+</html>

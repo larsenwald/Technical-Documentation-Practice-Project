@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DnD 5.5e Character Creation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, intial-scale=1.0" />
+    <link rel="stylesheet" href="normalize.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>D&D Character Creation Documentation</h1>
+      <div class="nav-links">
+        <a href="#introduction"><div class="nav-link">Introduction</div></a>
+        <a href="#primary-character-elements"
+          ><div class="nav-link">Primary Character Elements</div></a
+        >
+        <a href="#ability-score-generation"
+          ><div class="nav-link">Ability Score Generation</div></a
+        >
+        <a href="#character-definition"
+          ><div class="nav-link">Character Definition</div></a
+        >
+        <a href="#combat-statistics"
+          ><div class="nav-link">Combat Statistics</div></a
+        >
+        <a href="#final-details"><div class="nav-link">Final Details</div></a>
+        <a href="#conclusion"><div class="nav-link">Conclusion</div></a>
+        <a href="#"><div class="nav-link">Reference</div></a>
+      </div>
+    </nav>
+    <main>
+      <section id="introduction">
+        <h2>Introduction</h2>
+        <p>
+          This technical document outlines the standardized process for creating
+          a character in Dungeons & Dragons 5.5e. The procedure consists of
+          eight core steps, with the first three being interchangeable in order.
+          Follow each section sequentially after determining your preferred
+          order for the first three steps. For more traditional instruction, you
+          can refer to
+          <a href="https://5e.tools/book.html#xphb,2" target="_blank"
+            >chapter 2 of the Player's Handbook</a
+          >.
+        </p>
+      </section>
+      <h2>Core Steps Overview</h2>
+      <p>
+        The first three steps, listed in the "Primary Character Elements"
+        section, can be done in any order based on your preference.
+      </p>
+      <section id="primary-character-elements">
+        <h2>Primary Character Elements</h2>
+        <ol>
+          <li><span class="step">Pick a species</span> and record:</li>
+          <ul class="root-ul">
+            <li>Size category</li>
+            <li>Base speed</li>
+            <li>Racial traits</li>
+          </ul>
+          <li><span class="step">Pick a class</span> and record:</li>
+          <ul class="root-ul">
+            <li>
+              These proficiencies:
+              <ul>
+                <li>Saving throws</li>
+                <li>Skills</li>
+                <li>Weapons</li>
+                <li>Armor training</li>
+              </ul>
+            </li>
+            <li>Starting equipment</li>
+          </ul>
+          <li>
+            <span class="step">Pick a background</span> and record:
+            <ul class="root-ul">
+              <li>
+                Ability score increases. You can choose between:
+                <ul>
+                  <li>
+                    Increasing one listed ability score by 2 AND a different one
+                    by 1
+                  </li>
+                  <li>Or increasing all three listed ability scores by 1</li>
+                  <li>Note that no score can exceed 20</li>
+                </ul>
+              </li>
+              <li>Background feat</li>
+              <li>Skill proficiencies (you get two)</li>
+              <li>Tool proficiency (you get one)</li>
+              <li>Starting equipment</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+      <section id="ability-score-generation">
+        <h2>Ability Score Generation</h2>
+        <ol start="4">
+          <li>
+            <span class="step">Generate and assign ability scores</span> You
+            need six numbers. Pick one of these methods to obtain them (hover
+            over each for instructions):
+            <ul>
+              <li>
+                <div class="tooltip">
+                  Standard Array
+                  <div class="tooltiptext">
+                    Your six numbers are: 15, 14, 13, 12, 10, 8.
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="tooltip">
+                  Random Rolls
+                  <div class="tooltiptext">
+                    Roll four d6s and record the total of the highest three
+                    dice. Do this five more times, so you have six numbers.
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="tooltip">
+                  <a href="point-buy-calculator.html" target="_blank"
+                    >Point Buy</a
+                  >
+                  <div class="tooltiptext">
+                    You have 27 points to spend on your ability scores. The cost
+                    of each score depends on how high the score is. Because this
+                    one is a bit more complex, you can click to follow the link
+                    that leads to a calculator.
+                  </div>
+                </div>
+              </li>
+            </ul>
+            Then, once you have your six numbers:
+            <ul>
+              <li>Assign each number to an ability of your choice</li>
+              <li>Apply any ability modifiers</li>
+              <li>Apply background bonuses</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+      <section id="character-definition">
+        <h2>Character Definition</h2>
+        <ol start="5">
+          <li><span class="step">Alignment Selection</span> Choose from:</li>
+          <ul class="root-ul">
+            <li>Lawful Good, Neutral Good, Chaotic Good</li>
+            <li>Lawful Neutral, Neutral, Chaotic Neutral</li>
+            <li>Lawful Evil, Neutral Evil, Chaotic Evil</li>
+          </ul>
+          <li><span class="step">Class Features</span></li>
+          <ul>
+            <li>Record all level 1 features</li>
+            <li>
+              If starting above level 1, record features up to starting level
+            </li>
+            <li>
+              There might be features that improve at higher levels, note these
+              for future reference (more on this later in the documentation)
+            </li>
+          </ul>
+        </ol>
+      </section>
+      <section id="combat-statistics">
+        <h2>Combat Statistics</h2>
+        <ol start="7">
+          <li>
+            <span class="step">Calculating Combat Values</span> Calculate and
+            record:
+          </li>
+          <ul>
+            <li>
+              Health points
+              <ul>
+                <li>
+                  At Level 1: Class hit die maximum + Constitution modifier
+                </li>
+                <li>
+                  At Higher Levels: Add (hit die roll + Constitution modifier)
+                  per level
+                </li>
+              </ul>
+            </li>
+            <li>
+              Core Combat Stats
+              <ul>
+                <li>Initiative = Dexterity modifer</li>
+                <li>
+                  Base AC = 10 + Dexterity modifier (adjust for armor/shield)
+                </li>
+              </ul>
+            </li>
+            <li>
+              Spellcasting (if applicable)
+              <ul>
+                <li>
+                  Spell save DC = 8 + spellcasting ability modifier +
+                  proficiency bonus
+                </li>
+                <li>
+                  Spell attack modifier = spellcasting ability modifier +
+                  proficiency bonus
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </ol>
+      </section>
+      <section id="final-details">
+        <h2>Final Details</h2>
+        <ol start="8">
+          <li>
+            <span class="step">Character Details</span>
+            <ul>
+              <li>
+                You get 3 languages:
+                <ul>
+                  <li>Common (automatic)</li>
+                  <li>
+                    Two additional languages from the
+                    <a
+                      href="https://5e.tools/tables.html#choose%20languages%3b%20standard%20languages_xphb"
+                      target="_blank"
+                      >standard languages table</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li>Origin details</li>
+              <li>Physical characteristics</li>
+              <li>Personality traits</li>
+              <li>Ideals</li>
+              <li>Bonds</li>
+              <li>Flaws</li>
+              <li>Appearance description</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+      <section id="conclusion">
+        <h2>Conclusion</h2>
+        <p>
+          It is strongly recommended to maintain a dedicated section in your
+          character sheet (or anywhere else) for tracking features that improve
+          at higher levels. Many class abilities, spells, and other features
+          scale or change as your character advances, and writing these down
+          somewhere during character creation will make future level ups easier
+          and ensure you don't miss any changes/improvements to abilities. Here
+          is an example of a "level-up" section for a newly created first-level
+          Wood-Elf Ranger.
+        </p>
+        <div class="card">
+          <p><strong>"Wood Elf Lineage" Trait</strong></p>
+          <ul>
+            <li>At level 3, gain the "Longstrider" spell</li>
+            <li>At level 5, gain the "Pass without Trace" spell</li>
+          </ul>
+          <p><strong>"Favored Enemy" Ability charges</strong></p>
+          <ul>
+            <li>Levels 1-4 || 2 charges</li>
+            <li>Levels 5-8 || 3 charges</li>
+            <li>Levels 9-12 || 4 charges</li>
+            <li>Levels 13-16 || 5 charges</li>
+            <li>Levels 17-20 || 6 charges</li>
+          </ul>
+        </div>
+        <p>
+          As you gain levels, you would continuously adjust these notes, adding
+          new abilities or removing old ones based on information you might need
+          for future level ups.
+        </p>
+      </section>
+      <section id="reference">
+        <h2>Reference</h2>
+        <p>- <a href="https://5e.tools" target="_blank">5e.tools</a></p>
+      </section>
+    </main>
+  </body>
+</html>
