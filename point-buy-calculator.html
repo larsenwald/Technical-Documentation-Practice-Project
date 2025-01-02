@@ -1,212 +1,268 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <title>Larsen's Point Buy Calculator</title>
+    <title>Larsenwald's Point Buy Calculator</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=MedievalSharp&family=Quicksand:wght@400;600&display=swap");
+
+      :root {
+        --primary: #2c3e50;
+        --accent: #e74c3c;
+        --bg: #f8f9fa;
+        --paper: #fff;
+        --text: #2c3e50;
+      }
+
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Quicksand", sans-serif;
+        background: var(--bg);
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d1d8e0' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         margin: 0;
-        padding: 0;
-        background: #eef8ee;
-        color: #003300;
+        padding: 2rem;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--paper);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      h1 {
+        font-family: "MedievalSharp", cursive;
+        text-align: center;
+        color: var(--primary);
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-box {
+        background: var(--bg);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.2s;
+      }
+
+      .stat-box:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-box h3 {
+        font-family: "MedievalSharp", cursive;
+        margin: 0 0 1rem 0;
+        color: var(--primary);
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .controls span {
+        font-size: 1.5rem;
+        font-weight: 600;
+        min-width: 2rem;
+      }
+
+      button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
-        min-height: 100vh;
-        padding-top: 20px;
+        font-size: 1rem;
       }
-      .container {
-        background: #f6fff6;
-        border: 2px solid #66cc66;
-        border-radius: 8px;
-        padding: 20px;
-        max-width: 400px;
-        width: 90%;
-        box-shadow: 0 4px 8px rgba(0, 128, 0, 0.2);
-        margin-top: 20vh;
+
+      .control-btn {
+        width: 2rem;
+        height: 2rem;
       }
-      .suggestions {
-        background: inherit;
-        padding: 20px;
-        max-width: 400px;
-        width: 90%;
-        margin-top: 20px;
-      }
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .stat-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-      .stat-row label {
-        flex: 1;
-        margin-right: 10px;
-      }
-      .stat-row select {
-        flex: 1;
-        padding: 5px;
-        border: 1px solid #66cc66;
-        border-radius: 4px;
-        background-color: #ffffff;
-        color: #003300;
-      }
-      .points {
-        text-align: center;
-        margin-top: 20px;
-        font-weight: bold;
-      }
-      .over-limit {
-        color: #cc0000;
-      }
-      .reset {
+
+      .reset-btn {
+        margin: 1rem auto;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
         display: block;
-        margin: 20px auto 0;
-        padding: 10px 20px;
-        background-color: #66cc66;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 600;
+      }
+
+      button:hover:not(:disabled) {
+        background: var(--accent);
+        transform: scale(1.1);
+      }
+
+      button:disabled {
+        background: #cbd5e0;
+        cursor: not-allowed;
+      }
+
+      .total {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: var(--primary);
         color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
+        border-radius: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
       }
-      .reset:hover {
-        background-color: #55aa55;
+
+      .error {
+        color: var(--accent);
+        text-align: center;
+        margin-top: 1rem;
+        font-weight: 600;
+        min-height: 1.5rem;
       }
-      table {
+
+      .modifier {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.5rem;
+      }
+
+      .reference {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #eee;
+      }
+
+      .reference h3 {
+        font-family: "MedievalSharp", cursive;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      .class-table {
         width: 100%;
-        margin-top: 10px;
         border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.9rem;
       }
-      th,
-      td {
-        border: 1px solid #66cc66;
-        padding: 8px;
+
+      .class-table th,
+      .class-table td {
+        padding: 0.5rem;
         text-align: center;
+        border: 1px solid #ddd;
       }
-      th {
-        background-color: #66cc66;
+
+      .class-table th {
+        background: var(--primary);
         color: white;
       }
-      .info-text {
-        font-size: 14px;
-        margin-bottom: 10px;
-        text-align: center;
+
+      .class-table tr:nth-child(even) {
+        background: var(--bg);
       }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Larsenwald's Point Buy Calculator</h1>
-      <p style="text-align: center">
-        Assign a number to each ability score. Do not let "Points Used" exceed
-        27.
-      </p>
-      <div class="stat-row">
-        <label for="str">Strength</label>
-        <select id="str" onchange="updatePoints()">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div class="stat-row">
-        <label for="dex">Dexterity</label>
-        <select id="dex" onchange="updatePoints()">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div class="stat-row">
-        <label for="con">Constitution</label>
-        <select id="con" onchange="updatePoints()">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div class="stat-row">
-        <label for="int">Intelligence</label>
-        <select id="int" onchange="updatePoints()">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div class="stat-row">
-        <label for="wis">Wisdom</label>
-        <select id="wis" onchange="updatePoints()">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div class="stat-row">
-        <label for="cha">Charisma</label>
-        <select id="cha" onchange="updatePoints()">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div class="points" id="pointsUsed">Points Used: 0 / 27</div>
-      <button class="reset" onclick="resetCalculator()">Reset</button>
-    </div>
 
-    <div class="suggestions">
-      <div class="info-text" style="font-size: 1rem">
-        Below is a table of recommended ability scores for each class using the
-        standard array.
+      <div class="stat-container">
+        <div class="stat-box">
+          <h3>Strength</h3>
+          <div class="controls">
+            <button class="control-btn" onclick="decrease('str')">−</button>
+            <span id="str">8</span>
+            <button class="control-btn" onclick="increase('str')">+</button>
+          </div>
+          <div class="modifier" id="str-mod">(-1)</div>
+        </div>
+        <div class="stat-box">
+          <h3>Dexterity</h3>
+          <div class="controls">
+            <button class="control-btn" onclick="decrease('dex')">−</button>
+            <span id="dex">8</span>
+            <button class="control-btn" onclick="increase('dex')">+</button>
+          </div>
+          <div class="modifier" id="dex-mod">(-1)</div>
+        </div>
+        <div class="stat-box">
+          <h3>Constitution</h3>
+          <div class="controls">
+            <button class="control-btn" onclick="decrease('con')">−</button>
+            <span id="con">8</span>
+            <button class="control-btn" onclick="increase('con')">+</button>
+          </div>
+          <div class="modifier" id="con-mod">(-1)</div>
+        </div>
+        <div class="stat-box">
+          <h3>Intelligence</h3>
+          <div class="controls">
+            <button class="control-btn" onclick="decrease('int')">−</button>
+            <span id="int">8</span>
+            <button class="control-btn" onclick="increase('int')">+</button>
+          </div>
+          <div class="modifier" id="int-mod">(-1)</div>
+        </div>
+        <div class="stat-box">
+          <h3>Wisdom</h3>
+          <div class="controls">
+            <button class="control-btn" onclick="decrease('wis')">−</button>
+            <span id="wis">8</span>
+            <button class="control-btn" onclick="increase('wis')">+</button>
+          </div>
+          <div class="modifier" id="wis-mod">(-1)</div>
+        </div>
+        <div class="stat-box">
+          <h3>Charisma</h3>
+          <div class="controls">
+            <button class="control-btn" onclick="decrease('cha')">−</button>
+            <span id="cha">8</span>
+            <button class="control-btn" onclick="increase('cha')">+</button>
+          </div>
+          <div class="modifier" id="cha-mod">(-1)</div>
+        </div>
       </div>
-      <table>
-        <thead>
+
+      <div class="total">Points Remaining: <span id="points">27</span></div>
+      <div id="error" class="error"></div>
+      <button class="reset-btn" onclick="reset()">Reset All Stats</button>
+
+      <div class="reference">
+        <h3>Recommended Ability Scores</h3>
+        <p>
+          Below is a table of recommended ability scores for each class using
+          the standard array.
+        </p>
+        <table class="class-table">
           <tr>
             <th>Class</th>
-            <th>Str.</th>
-            <th>Dex.</th>
-            <th>Con.</th>
-            <th>Int.</th>
-            <th>Wis.</th>
-            <th>Cha.</th>
+            <th>STR</th>
+            <th>DEX</th>
+            <th>CON</th>
+            <th>INT</th>
+            <th>WIS</th>
+            <th>CHA</th>
           </tr>
-        </thead>
-        <tbody>
           <tr>
             <td>Barbarian</td>
             <td>15</td>
@@ -315,66 +371,95 @@
             <td>14</td>
             <td>10</td>
           </tr>
-        </tbody>
-      </table>
+        </table>
+      </div>
     </div>
 
     <script>
-      // Returns the point cost for a given score according to 5e point buy rules
-      function pointCost(score) {
-        switch (score) {
-          case 8:
-            return 0;
-          case 9:
-            return 1;
-          case 10:
-            return 2;
-          case 11:
-            return 3;
-          case 12:
-            return 4;
-          case 13:
-            return 5;
-          case 14:
-            return 7;
-          case 15:
-            return 9;
-          default:
-            return 0;
-        }
-      }
-
-      function updatePoints() {
-        const totalPoints = 27;
-        let abilityIds = ["str", "dex", "con", "int", "wis", "cha"];
-        let points = 0;
-
-        abilityIds.forEach(function (id) {
-          let scoreValue = parseInt(document.getElementById(id).value);
-          points += pointCost(scoreValue);
-        });
-
-        let display = document.getElementById("pointsUsed");
-        display.textContent = "Points Used: " + points + " / " + totalPoints;
-
-        if (points > totalPoints) {
-          display.classList.add("over-limit");
-        } else {
-          display.classList.remove("over-limit");
-        }
-      }
-
-      function resetCalculator() {
-        let abilityIds = ["str", "dex", "con", "int", "wis", "cha"];
-        abilityIds.forEach(function (id) {
-          document.getElementById(id).value = "8";
-        });
-        updatePoints();
-      }
-
-      window.onload = function () {
-        updatePoints();
+      const stats = {
+        str: 8,
+        dex: 8,
+        con: 8,
+        int: 8,
+        wis: 8,
+        cha: 8,
       };
+
+      let pointsUsed = 0;
+      const TOTAL_POINTS = 27;
+
+      const costTable = {
+        8: 0,
+        9: 1,
+        10: 2,
+        11: 3,
+        12: 4,
+        13: 5,
+        14: 7,
+        15: 9,
+      };
+
+      function calculateModifier(value) {
+        return Math.floor((value - 10) / 2);
+      }
+
+      function calculateCost(value) {
+        return costTable[value] || 0;
+      }
+
+      function updateDisplay() {
+        Object.keys(stats).forEach((stat) => {
+          document.getElementById(stat).textContent = stats[stat];
+          const mod = calculateModifier(stats[stat]);
+          document.getElementById(`${stat}-mod`).textContent = `(${
+            mod >= 0 ? "+" : ""
+          }${mod})`;
+        });
+
+        pointsUsed = Object.values(stats).reduce((total, value) => {
+          return total + calculateCost(value);
+        }, 0);
+
+        document.getElementById("points").textContent =
+          TOTAL_POINTS - pointsUsed;
+        document.getElementById("error").textContent = "";
+      }
+
+      function increase(stat) {
+        if (stats[stat] >= 15) {
+          document.getElementById("error").textContent = "Maximum value is 15";
+          return;
+        }
+
+        const newCost =
+          calculateCost(stats[stat] + 1) - calculateCost(stats[stat]);
+        if (pointsUsed + newCost > TOTAL_POINTS) {
+          document.getElementById("error").textContent = "Not enough points";
+          return;
+        }
+
+        stats[stat]++;
+        updateDisplay();
+      }
+
+      function decrease(stat) {
+        if (stats[stat] <= 8) {
+          document.getElementById("error").textContent = "Minimum value is 8";
+          return;
+        }
+
+        stats[stat]--;
+        updateDisplay();
+      }
+
+      function reset() {
+        Object.keys(stats).forEach((stat) => {
+          stats[stat] = 8;
+        });
+        updateDisplay();
+      }
+
+      updateDisplay();
     </script>
   </body>
 </html>
