@@ -1017,9 +1017,7 @@
           const increaseButton = document.getElementById(`${stat}-increase`);
 
           decreaseButton.disabled = value <= 8;
-
-          const canAffordIncrease = hasEnoughPoints(stat, value + 1);
-          increaseButton.disabled = value >= 15 || !canAffordIncrease;
+          increaseButton.disabled = value >= 15;
 
           usedPoints += POINT_COSTS[value];
         });
