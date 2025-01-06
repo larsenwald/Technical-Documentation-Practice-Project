@@ -1,394 +1,872 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Larsenwald's Point Buy Calculator</title>
+
     <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600&display=swap"
       rel="stylesheet"
     />
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=MedievalSharp&family=Quicksand:wght@400;600&display=swap");
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
       :root {
-        --primary: #2c3e50;
-        --accent: #e74c3c;
-        --bg: #f8f9fa;
-        --paper: #fff;
-        --text: #2c3e50;
+        --primary: #6366f1;
+        --primary-light: #818cf8;
+        --accent: #f43f5e;
+        --bg: #ffffff;
+        --surface: #f8fafc;
+        --surface-2: #f1f5f9;
+        --text: #1e293b;
+        --text-secondary: #64748b;
+        --border: #e2e8f0;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
       }
 
-      body {
-        font-family: "Quicksand", sans-serif;
-        background: var(--bg);
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d1d8e0' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      [data-theme="dark"] {
+        --primary: #818cf8;
+        --primary-light: #6366f1;
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface-2: #334155;
+        --text: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --border: #334155;
+      }
+
+      * {
         margin: 0;
-        padding: 2rem;
-        min-height: 100vh;
+        padding: 0;
         box-sizing: border-box;
       }
 
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
       .container {
-        max-width: 800px;
+        max-width: 1400px;
+        height: 100vh;
         margin: 0 auto;
-        background: var(--paper);
-        padding: 2rem;
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 1.5rem;
+      }
+
+      header {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        background: var(--surface);
         border-radius: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        box-shadow: var(--shadow);
       }
 
       h1 {
-        font-family: "MedievalSharp", cursive;
-        text-align: center;
+        font-family: "Poppins", sans-serif;
+        font-size: 1.5rem;
         color: var(--primary);
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .stat-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-      }
-
-      .stat-box {
-        background: var(--bg);
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        text-align: center;
-        transition: transform 0.2s;
-      }
-
-      .stat-box:hover {
-        transform: translateY(-2px);
-      }
-
-      .stat-box h3 {
-        font-family: "MedievalSharp", cursive;
-        margin: 0 0 1rem 0;
-        color: var(--primary);
+        font-weight: 600;
       }
 
       .controls {
         display: flex;
-        justify-content: center;
         align-items: center;
-        gap: 1rem;
+        gap: 1.5rem;
       }
 
-      .controls span {
-        font-size: 1.5rem;
+      .points-display {
+        background: var(--surface-2);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .points-value {
+        color: var(--primary);
         font-weight: 600;
-        min-width: 2rem;
+      }
+
+      .visualization {
+        grid-column: 1 / -1;
+        position: relative;
+        background: var(--surface);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+        min-height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stats-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+
+      .stat-card {
+        position: absolute;
+        background: var(--surface-2);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        width: 160px;
+      }
+
+      .stat-card:nth-child(1) {
+        top: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .stat-card:nth-child(2) {
+        top: 25%;
+        right: 10%;
+      }
+
+      .stat-card:nth-child(3) {
+        bottom: 25%;
+        right: 10%;
+      }
+
+      .stat-card:nth-child(4) {
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .stat-card:nth-child(5) {
+        bottom: 25%;
+        left: 10%;
+      }
+
+      .stat-card:nth-child(6) {
+        top: 25%;
+        left: 10%;
+      }
+
+      .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stat-name {
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .stat-modifier {
+        font-size: 0.875rem;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .stat-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
       }
 
       button {
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 50%;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
         cursor: pointer;
         transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-      }
-
-      .control-btn {
-        width: 2rem;
-        height: 2rem;
-      }
-
-      .reset-btn {
-        margin: 1rem auto;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        display: block;
-        font-family: "Quicksand", sans-serif;
-        font-weight: 600;
+        min-width: 2.5rem;
       }
 
       button:hover:not(:disabled) {
-        background: var(--accent);
-        transform: scale(1.1);
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
       }
 
       button:disabled {
-        background: #cbd5e0;
+        opacity: 0.5;
         cursor: not-allowed;
       }
 
-      .total {
-        text-align: center;
-        margin-top: 2rem;
-        padding: 1rem;
-        background: var(--primary);
-        color: white;
-        border-radius: 0.5rem;
+      .stat-value {
         font-size: 1.25rem;
         font-weight: 600;
-      }
-
-      .error {
-        color: var(--accent);
+        min-width: 2rem;
         text-align: center;
-        margin-top: 1rem;
-        font-weight: 600;
-        min-height: 1.5rem;
       }
 
-      .modifier {
-        font-size: 0.9rem;
-        color: #666;
-        margin-top: 0.5rem;
+      select {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        padding: 0.5rem 2.5rem 0.5rem 1rem;
+        border-radius: 0.5rem;
+        color: var(--text);
+        font-size: 0.875rem;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 1.5em;
       }
 
-      .reference {
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 2px solid #eee;
+      select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
       }
 
-      .reference h3 {
-        font-family: "MedievalSharp", cursive;
-        color: var(--primary);
-        margin-bottom: 1rem;
+      .cosmic-toggle {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 140px;
+        height: 70px;
+        transform-style: preserve-3d;
+        perspective: 500px;
+        z-index: 1000;
       }
 
-      .class-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-        font-size: 0.9rem;
-      }
-
-      .class-table th,
-      .class-table td {
-        padding: 0.5rem;
-        text-align: center;
-        border: 1px solid #ddd;
-      }
-
-      .class-table th {
-        background: var(--primary);
+      .reset-btn {
+        background: var(--accent);
         color: white;
+        border: none;
+        padding: 0.5rem 1rem;
       }
 
-      .class-table tr:nth-child(even) {
-        background: var(--bg);
+      .reset-btn:hover {
+        background: var(--accent);
+        opacity: 0.9;
+      }
+
+      @media (max-width: 1024px) {
+        .container {
+          display: flex;
+          flex-direction: column;
+          height: auto;
+          padding: 1rem;
+          gap: 1rem;
+        }
+
+        header {
+          padding: 1rem;
+        }
+
+        .controls {
+          display: grid;
+          grid-template-columns: 1fr auto auto;
+          gap: 1rem;
+          width: 100%;
+          align-items: center;
+        }
+
+        .visualization {
+          display: flex;
+          flex-direction: column;
+          padding: 1rem;
+          gap: 2rem;
+          min-height: auto;
+        }
+
+        #statChart {
+          position: static !important;
+          width: 100% !important;
+          max-width: 500px;
+          height: auto;
+          margin: 0 auto;
+          opacity: 1;
+        }
+
+        .stats-grid {
+          position: static;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .stat-card {
+          position: static;
+          width: 100%;
+          transform: none;
+          margin: 0;
+        }
+
+        .stat-card:nth-child(1),
+        .stat-card:nth-child(2),
+        .stat-card:nth-child(3),
+        .stat-card:nth-child(4),
+        .stat-card:nth-child(5),
+        .stat-card:nth-child(6) {
+          top: auto;
+          left: auto;
+          right: auto;
+          bottom: auto;
+          transform: none;
+        }
+
+        .stat-controls button {
+          min-width: 3rem;
+          min-height: 3rem;
+          font-size: 1.2rem;
+        }
+
+        .stat-value {
+          font-size: 1.5rem;
+          min-width: 3rem;
+        }
+
+        .tooltip {
+          position: fixed;
+          left: 50%;
+          bottom: 20px;
+          transform: translateX(-50%);
+          width: calc(100% - 40px);
+          max-width: 400px;
+          z-index: 1000;
+        }
+
+        @media (max-width: 600px) {
+          .controls {
+            grid-template-columns: 1fr;
+          }
+
+          .stats-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      }
+
+      .class-select-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .tooltip-container {
+        position: relative;
+      }
+
+      .info-icon {
+        color: var(--text-secondary);
+        cursor: help;
+        font-size: 0.9rem;
+      }
+
+      .tooltip {
+        visibility: hidden;
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 0;
+        width: 280px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        color: var(--text);
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transition: opacity 0.2s, visibility 0.2s;
+        z-index: 100;
+      }
+
+      .tooltip::before {
+        content: "";
+        position: absolute;
+        left: -5px;
+        top: 1rem;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid var(--border);
+      }
+
+      .tooltip-container:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .tooltip {
+          left: 50%;
+          bottom: calc(100% + 10px);
+          top: auto;
+          transform: translateX(-50%);
+          width: 250px;
+        }
+
+        .tooltip::before {
+          left: 50%;
+          bottom: -5px;
+          top: auto;
+          transform: translateX(-50%);
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid var(--border);
+          border-bottom: none;
+        }
+      }
+
+      #statChart {
+        position: absolute;
+        z-index: 1;
+        opacity: 0.8;
+        max-width: 400px;
+        max-height: 400px;
+      }
+
+      .cosmic-toggle {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 140px;
+        height: 70px;
+        transform-style: preserve-3d;
+        perspective: 500px;
+        z-index: 1000;
+      }
+
+      .toggle {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, #1a1a2e, #16213e);
+        border-radius: 35px;
+        transition: 0.5s;
+        transform-style: preserve-3d;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5),
+          inset 0 0 15px rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+      }
+
+      .cosmos {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(1px 1px at 10% 10%, #fff 100%, transparent),
+          radial-gradient(1px 1px at 20% 20%, #fff 100%, transparent),
+          radial-gradient(2px 2px at 30% 30%, #fff 100%, transparent),
+          radial-gradient(1px 1px at 40% 40%, #fff 100%, transparent),
+          radial-gradient(2px 2px at 50% 50%, #fff 100%, transparent),
+          radial-gradient(1px 1px at 60% 60%, #fff 100%, transparent),
+          radial-gradient(2px 2px at 70% 70%, #fff 100%, transparent),
+          radial-gradient(1px 1px at 80% 80%, #fff 100%, transparent),
+          radial-gradient(1px 1px at 90% 90%, #fff 100%, transparent);
+        background-size: 200% 200%;
+        opacity: 0.1;
+        transition: 0.5s;
+      }
+
+      .toggle-orb {
+        position: absolute;
+        height: 62px;
+        width: 62px;
+        left: 4px;
+        bottom: 4px;
+        background: linear-gradient(145deg, #ff6b6b, #4ecdc4);
+        border-radius: 50%;
+        transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transform-style: preserve-3d;
+        z-index: 2;
+      }
+
+      .inner-orb {
+        position: absolute;
+        inset: 5px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #fff, #e6e6e6);
+        transition: 0.5s;
+        overflow: hidden;
+      }
+
+      .inner-orb::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgba(0, 0, 0, 0.1) 10deg,
+          transparent 20deg
+        );
+        animation: patternRotate 10s linear infinite;
+      }
+
+      .ring {
+        position: absolute;
+        inset: -3px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transition: 0.5s;
+      }
+
+      .toggle:checked + .slider {
+        background: linear-gradient(45deg, #16213e, #1a1a2e);
+      }
+
+      .toggle:checked + .slider .toggle-orb {
+        transform: translateX(70px) rotate(360deg);
+        background: linear-gradient(145deg, #4ecdc4, #45b7af);
+      }
+
+      .toggle:checked + .slider .inner-orb {
+        background: linear-gradient(145deg, #45b7af, #3da89f);
+        transform: scale(0.9);
+      }
+
+      .toggle:checked + .slider .ring {
+        border-color: rgba(78, 205, 196, 0.3);
+        animation: ringPulse 2s infinite;
+      }
+
+      .energy-line {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(78, 205, 196, 0.5),
+          transparent
+        );
+        transform-origin: left;
+        opacity: 0;
+        transition: 0.5s;
+      }
+
+      .energy-line:nth-child(1) {
+        top: 20%;
+        transform: rotate(15deg);
+      }
+      .energy-line:nth-child(2) {
+        top: 50%;
+        transform: rotate(0deg);
+      }
+      .energy-line:nth-child(3) {
+        top: 80%;
+        transform: rotate(-15deg);
+      }
+
+      .toggle:checked + .slider .energy-line {
+        opacity: 1;
+        animation: energyFlow 2s linear infinite;
+      }
+
+      .particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #4ecdc4;
+        border-radius: 50%;
+        opacity: 0;
+      }
+
+      .toggle:checked + .slider .particle {
+        animation: particleBurst 1s ease-out infinite;
+      }
+
+      .particle:nth-child(1) {
+        left: 20%;
+        animation-delay: 0s;
+      }
+      .particle:nth-child(2) {
+        left: 40%;
+        animation-delay: 0.2s;
+      }
+      .particle:nth-child(3) {
+        left: 60%;
+        animation-delay: 0.4s;
+      }
+      .particle:nth-child(4) {
+        left: 80%;
+        animation-delay: 0.6s;
+      }
+      .particle:nth-child(5) {
+        left: 30%;
+        animation-delay: 0.8s;
+      }
+      .particle:nth-child(6) {
+        left: 70%;
+        animation-delay: 1s;
+      }
+
+      @keyframes ringPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.3;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.6;
+        }
+      }
+
+      @keyframes patternRotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes energyFlow {
+        0% {
+          transform: scaleX(0) translateX(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scaleX(1) translateX(50%);
+          opacity: 1;
+        }
+        100% {
+          transform: scaleX(0) translateX(100%);
+          opacity: 0;
+        }
+      }
+
+      @keyframes particleBurst {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(
+              calc(cos(var(--angle)) * 50px),
+              calc(sin(var(--angle)) * 50px)
+            )
+            scale(0);
+          opacity: 0;
+        }
+      }
+
+      @keyframes cosmosPan {
+        0% {
+          background-position: 0% 0%;
+        }
+        100% {
+          background-position: 200% 200%;
+        }
+      }
+
+      .cosmic-toggle:hover .slider {
+        transform: rotateX(10deg) rotateY(10deg);
+      }
+
+      .cosmic-toggle:hover .toggle-orb {
+        transform: translateZ(10px);
+      }
+
+      .toggle:checked + .slider::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at var(--x) var(--y),
+          rgba(78, 205, 196, 0.2),
+          transparent 50%
+        );
+        opacity: 0;
+        animation: glowFollow 2s linear infinite;
+      }
+
+      @keyframes glowFollow {
+        0%,
+        100% {
+          opacity: 0.2;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .floating-text {
+        position: fixed;
+        pointer-events: none;
+        animation: floatAway 1s ease-out forwards;
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        opacity: 0;
+      }
+
+      @keyframes floatAway {
+        0% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(0.8);
+        }
+        20% {
+          opacity: 1;
+          transform: translate(-50%, -100%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -200%) scale(0.8);
+        }
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0.8);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes popOut {
+        0% {
+          transform: scale(1.2);
+        }
+        50% {
+          transform: scale(0.8);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .stat-value {
+        display: inline-block;
+        font-size: 1.25rem;
+        font-weight: 600;
+        min-width: 2rem;
+        text-align: center;
+      }
+
+      .pop-in {
+        animation: popIn 0.3s ease-out;
+      }
+
+      .pop-out {
+        animation: popOut 0.3s ease-out;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Larsenwald's Point Buy Calculator</h1>
+      <header>
+        <h1>Larsenwald's Point Buy Calculator</h1>
+        <div class="controls">
+          <div class="class-select-container">
+            <select id="classSelect" onchange="applyClassPreset()">
+              <option value="">
+                (Optional) Select a Class for Recommendations
+              </option>
+              <option value="barbarian">Barbarian</option>
+              <option value="bard">Bard</option>
+              <option value="cleric">Cleric</option>
+              <option value="druid">Druid</option>
+              <option value="fighter">Fighter</option>
+              <option value="monk">Monk</option>
+              <option value="paladin">Paladin</option>
+              <option value="ranger">Ranger</option>
+              <option value="rogue">Rogue</option>
+              <option value="sorcerer">Sorcerer</option>
+              <option value="warlock">Warlock</option>
+              <option value="wizard">Wizard</option>
+            </select>
+            <div class="tooltip-container">
+              <span class="info-icon">ⓘ</span>
+              <div class="tooltip">
+                These are recommended ability scores based on the Player's
+                Handbook. They're designed as helpful starting points but feel
+                free to customize your character as you envision them!
+              </div>
+            </div>
+          </div>
+          <div class="points-display">
+            Points: <span id="points" class="points-value">27</span>
+          </div>
+          <button class="reset-btn" onclick="resetStats()">Reset</button>
+        </div>
+      </header>
 
-      <div class="stat-container">
-        <div class="stat-box">
-          <h3>Strength</h3>
-          <div class="controls">
-            <button class="control-btn" onclick="decrease('str')">−</button>
-            <span id="str">8</span>
-            <button class="control-btn" onclick="increase('str')">+</button>
-          </div>
-          <div class="modifier" id="str-mod">(-1)</div>
+      <div class="visualization">
+        <canvas id="statChart"></canvas>
+        <div class="stats-grid">
+          <!-- Stat cards will be inserted here -->
         </div>
-        <div class="stat-box">
-          <h3>Dexterity</h3>
-          <div class="controls">
-            <button class="control-btn" onclick="decrease('dex')">−</button>
-            <span id="dex">8</span>
-            <button class="control-btn" onclick="increase('dex')">+</button>
-          </div>
-          <div class="modifier" id="dex-mod">(-1)</div>
-        </div>
-        <div class="stat-box">
-          <h3>Constitution</h3>
-          <div class="controls">
-            <button class="control-btn" onclick="decrease('con')">−</button>
-            <span id="con">8</span>
-            <button class="control-btn" onclick="increase('con')">+</button>
-          </div>
-          <div class="modifier" id="con-mod">(-1)</div>
-        </div>
-        <div class="stat-box">
-          <h3>Intelligence</h3>
-          <div class="controls">
-            <button class="control-btn" onclick="decrease('int')">−</button>
-            <span id="int">8</span>
-            <button class="control-btn" onclick="increase('int')">+</button>
-          </div>
-          <div class="modifier" id="int-mod">(-1)</div>
-        </div>
-        <div class="stat-box">
-          <h3>Wisdom</h3>
-          <div class="controls">
-            <button class="control-btn" onclick="decrease('wis')">−</button>
-            <span id="wis">8</span>
-            <button class="control-btn" onclick="increase('wis')">+</button>
-          </div>
-          <div class="modifier" id="wis-mod">(-1)</div>
-        </div>
-        <div class="stat-box">
-          <h3>Charisma</h3>
-          <div class="controls">
-            <button class="control-btn" onclick="decrease('cha')">−</button>
-            <span id="cha">8</span>
-            <button class="control-btn" onclick="increase('cha')">+</button>
-          </div>
-          <div class="modifier" id="cha-mod">(-1)</div>
-        </div>
-      </div>
-
-      <div class="total">Points Remaining: <span id="points">27</span></div>
-      <div id="error" class="error"></div>
-      <button class="reset-btn" onclick="reset()">Reset All Stats</button>
-
-      <div class="reference">
-        <h3>Recommended Ability Scores</h3>
-        <p>
-          Below is a table of recommended ability scores for each class using
-          the standard array.
-        </p>
-        <table class="class-table">
-          <tr>
-            <th>Class</th>
-            <th>STR</th>
-            <th>DEX</th>
-            <th>CON</th>
-            <th>INT</th>
-            <th>WIS</th>
-            <th>CHA</th>
-          </tr>
-          <tr>
-            <td>Barbarian</td>
-            <td>15</td>
-            <td>13</td>
-            <td>14</td>
-            <td>10</td>
-            <td>12</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <td>Bard</td>
-            <td>8</td>
-            <td>14</td>
-            <td>12</td>
-            <td>13</td>
-            <td>10</td>
-            <td>15</td>
-          </tr>
-          <tr>
-            <td>Cleric</td>
-            <td>14</td>
-            <td>8</td>
-            <td>13</td>
-            <td>10</td>
-            <td>15</td>
-            <td>12</td>
-          </tr>
-          <tr>
-            <td>Druid</td>
-            <td>8</td>
-            <td>12</td>
-            <td>14</td>
-            <td>13</td>
-            <td>15</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>Fighter</td>
-            <td>15</td>
-            <td>14</td>
-            <td>13</td>
-            <td>8</td>
-            <td>10</td>
-            <td>12</td>
-          </tr>
-          <tr>
-            <td>Monk</td>
-            <td>12</td>
-            <td>15</td>
-            <td>13</td>
-            <td>10</td>
-            <td>14</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <td>Paladin</td>
-            <td>15</td>
-            <td>10</td>
-            <td>13</td>
-            <td>8</td>
-            <td>12</td>
-            <td>14</td>
-          </tr>
-          <tr>
-            <td>Ranger</td>
-            <td>12</td>
-            <td>15</td>
-            <td>13</td>
-            <td>8</td>
-            <td>14</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>Rogue</td>
-            <td>12</td>
-            <td>15</td>
-            <td>13</td>
-            <td>14</td>
-            <td>10</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <td>Sorcerer</td>
-            <td>10</td>
-            <td>13</td>
-            <td>14</td>
-            <td>8</td>
-            <td>12</td>
-            <td>15</td>
-          </tr>
-          <tr>
-            <td>Warlock</td>
-            <td>8</td>
-            <td>14</td>
-            <td>13</td>
-            <td>12</td>
-            <td>10</td>
-            <td>15</td>
-          </tr>
-          <tr>
-            <td>Wizard</td>
-            <td>8</td>
-            <td>12</td>
-            <td>13</td>
-            <td>15</td>
-            <td>14</td>
-            <td>10</td>
-          </tr>
-        </table>
       </div>
     </div>
 
+    <label class="cosmic-toggle">
+      <input class="toggle" type="checkbox" id="themeToggle" />
+      <div class="slider">
+        <div class="cosmos"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="toggle-orb">
+          <div class="inner-orb"></div>
+          <div class="ring"></div>
+        </div>
+        <div class="particles">
+          <div style="--angle: 30deg" class="particle"></div>
+          <div style="--angle: 60deg" class="particle"></div>
+          <div style="--angle: 90deg" class="particle"></div>
+          <div style="--angle: 120deg" class="particle"></div>
+          <div style="--angle: 150deg" class="particle"></div>
+          <div style="--angle: 180deg" class="particle"></div>
+        </div>
+      </div>
+    </label>
+
     <script>
-      const stats = {
-        str: 8,
-        dex: 8,
-        con: 8,
-        int: 8,
-        wis: 8,
-        cha: 8,
+      const STATS = ["str", "dex", "con", "int", "wis", "cha"];
+      const STAT_NAMES = {
+        str: "Strength",
+        dex: "Dexterity",
+        con: "Constitution",
+        int: "Intelligence",
+        wis: "Wisdom",
+        cha: "Charisma",
       };
 
-      let pointsUsed = 0;
-      const TOTAL_POINTS = 27;
-
-      const costTable = {
+      const POINT_COSTS = {
         8: 0,
         9: 1,
         10: 2,
@@ -399,67 +877,320 @@
         15: 9,
       };
 
-      function calculateModifier(value) {
-        return Math.floor((value - 10) / 2);
-      }
+      const CLASS_PRESETS = {
+        barbarian: { str: 15, dex: 13, con: 14, int: 10, wis: 12, cha: 8 },
+        bard: { str: 8, dex: 14, con: 12, int: 13, wis: 10, cha: 15 },
+        cleric: { str: 14, dex: 8, con: 13, int: 10, wis: 15, cha: 12 },
+        druid: { str: 8, dex: 12, con: 14, int: 13, wis: 15, cha: 10 },
+        fighter: { str: 15, dex: 14, con: 13, int: 8, wis: 10, cha: 12 },
+        monk: { str: 12, dex: 15, con: 13, int: 10, wis: 14, cha: 8 },
+        paladin: { str: 15, dex: 10, con: 13, int: 8, wis: 12, cha: 14 },
+        ranger: { str: 12, dex: 15, con: 13, int: 8, wis: 14, cha: 10 },
+        rogue: { str: 12, dex: 15, con: 13, int: 14, wis: 10, cha: 8 },
+        sorcerer: { str: 10, dex: 13, con: 14, int: 8, wis: 12, cha: 15 },
+        warlock: { str: 8, dex: 14, con: 13, int: 12, wis: 10, cha: 15 },
+        wizard: { str: 8, dex: 12, con: 13, int: 15, wis: 14, cha: 10 },
+      };
 
-      function calculateCost(value) {
-        return costTable[value] || 0;
-      }
+      let stats = {
+        str: 8,
+        dex: 8,
+        con: 8,
+        int: 8,
+        wis: 8,
+        cha: 8,
+      };
 
-      function updateDisplay() {
-        Object.keys(stats).forEach((stat) => {
-          document.getElementById(stat).textContent = stats[stat];
-          const mod = calculateModifier(stats[stat]);
-          document.getElementById(`${stat}-mod`).textContent = `(${
-            mod >= 0 ? "+" : ""
-          }${mod})`;
-        });
+      let totalPoints = 27;
+      let statChart = null;
+      let diceScene = null;
 
-        pointsUsed = Object.values(stats).reduce((total, value) => {
-          return total + calculateCost(value);
-        }, 0);
-
-        document.getElementById("points").textContent =
-          TOTAL_POINTS - pointsUsed;
-        document.getElementById("error").textContent = "";
-      }
-
-      function increase(stat) {
-        if (stats[stat] >= 15) {
-          document.getElementById("error").textContent = "Maximum value is 15";
-          return;
-        }
-
-        const newCost =
-          calculateCost(stats[stat] + 1) - calculateCost(stats[stat]);
-        if (pointsUsed + newCost > TOTAL_POINTS) {
-          document.getElementById("error").textContent = "Not enough points";
-          return;
-        }
-
-        stats[stat]++;
+      function init() {
+        createStatCards();
+        initializeChart();
+        initializeDice();
         updateDisplay();
+      }
+
+      function createStatCards() {
+        const container = document.querySelector(".stats-grid");
+        STATS.forEach((stat) => {
+          const card = document.createElement("div");
+          card.className = "stat-card";
+          card.innerHTML = `
+                  <div class="stat-header">
+                      <div class="stat-name">${STAT_NAMES[stat]}</div>
+                      <div class="stat-modifier" id="${stat}-mod">(+0)</div>
+                  </div>
+                  <div class="stat-controls">
+                      <button onclick="decrease('${stat}')" id="${stat}-decrease">-</button>
+                      <span class="stat-value" id="${stat}-value">8</span>
+                      <button onclick="increase('${stat}', event)" id="${stat}-increase">+</button>
+                  </div>
+              `;
+          container.appendChild(card);
+        });
+      }
+
+      function animateStatChange(stat, isIncrease) {
+        gsap.from(`#${stat}-value`, {
+          scale: isIncrease ? 1.2 : 0.8,
+          duration: 0.3,
+          ease: "back.out(1.7)",
+        });
+      }
+
+      const originalIncrease = increase;
+      const originalDecrease = decrease;
+
+      function increase(stat, e) {
+        const currentValue = stats[stat];
+        if (currentValue < 15 && hasEnoughPoints(stat, currentValue + 1)) {
+          stats[stat]++;
+          updateDisplay();
+          const element = document.getElementById(`${stat}-value`);
+          element.classList.remove("pop-in", "pop-out");
+          void element.offsetWidth; // Trigger reflow
+          element.classList.add("pop-in");
+          element.addEventListener(
+            "animationend",
+            () => {
+              element.classList.remove("pop-in");
+            },
+            { once: true }
+          );
+        } else if (currentValue < 15) {
+          createFloatingText(e, "No points!");
+        }
+      }
+
+      function createFloatingText(e, text) {
+        const element = document.createElement("div");
+        element.className = "floating-text";
+        element.textContent = text;
+        element.style.left = `${e.clientX}px`;
+        element.style.top = `${e.clientY}px`;
+        document.body.appendChild(element);
+
+        element.addEventListener("animationend", () => {
+          element.remove();
+        });
       }
 
       function decrease(stat) {
-        if (stats[stat] <= 8) {
-          document.getElementById("error").textContent = "Minimum value is 8";
-          return;
+        if (stats[stat] > 8) {
+          stats[stat]--;
+          updateDisplay();
+          const element = document.getElementById(`${stat}-value`);
+          element.classList.remove("pop-in", "pop-out");
+          void element.offsetWidth; // Trigger reflow
+          element.classList.add("pop-out");
+          element.addEventListener(
+            "animationend",
+            () => {
+              element.classList.remove("pop-out");
+            },
+            { once: true }
+          );
         }
-
-        stats[stat]--;
-        updateDisplay();
       }
 
-      function reset() {
-        Object.keys(stats).forEach((stat) => {
-          stats[stat] = 8;
+      function hasEnoughPoints(stat, newValue) {
+        const currentCost = POINT_COSTS[stats[stat]] || 0;
+        const newCost = POINT_COSTS[newValue] || 0;
+        return totalPoints + currentCost - newCost >= 0;
+      }
+
+      function updateDisplay() {
+        let usedPoints = 0;
+
+        STATS.forEach((stat) => {
+          const value = stats[stat];
+          const modifier = Math.floor((value - 10) / 2);
+
+          document.getElementById(`${stat}-value`).textContent = value;
+          document.getElementById(`${stat}-mod`).textContent = `(${
+            modifier >= 0 ? "+" : ""
+          }${modifier})`;
+
+          const decreaseButton = document.getElementById(`${stat}-decrease`);
+          const increaseButton = document.getElementById(`${stat}-increase`);
+
+          decreaseButton.disabled = value <= 8;
+
+          const canAffordIncrease = hasEnoughPoints(stat, value + 1);
+          increaseButton.disabled = value >= 15 || !canAffordIncrease;
+
+          usedPoints += POINT_COSTS[value];
         });
-        updateDisplay();
+
+        totalPoints = 27 - usedPoints;
+        document.getElementById("points").textContent = totalPoints;
+
+        updateChart();
       }
 
-      updateDisplay();
+      function initializeChart() {
+        const ctx = document.getElementById("statChart").getContext("2d");
+
+        statChart = new Chart(ctx, {
+          type: "radar",
+          data: {
+            labels: STATS.map((stat) => STAT_NAMES[stat]),
+            datasets: [
+              {
+                label: "Ability Scores",
+                data: STATS.map((stat) => stats[stat]),
+                backgroundColor: "rgba(231, 76, 60, 0.2)",
+                borderColor: "rgba(231, 76, 60, 0.8)",
+                pointBackgroundColor: "rgba(231, 76, 60, 1)",
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "rgba(231, 76, 60, 1)",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              r: {
+                angleLines: {
+                  color: "rgba(231, 76, 60, 0.2)",
+                },
+                grid: {
+                  color: "rgba(231, 76, 60, 0.2)",
+                },
+                pointLabels: {
+                  font: {
+                    family: "Inter",
+                    size: 14,
+                  },
+                  color: "#e74c3c",
+                },
+                suggestedMin: 8,
+                suggestedMax: 15,
+                ticks: {
+                  stepSize: 1,
+                  display: false,
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            animation: {
+              duration: 500,
+            },
+          },
+        });
+      }
+
+      function updateChart() {
+        if (!statChart) return;
+        statChart.data.datasets[0].data = STATS.map((stat) => stats[stat]);
+        statChart.update();
+      }
+
+      function applyClassPreset() {
+        const selectedClass = document.getElementById("classSelect").value;
+        if (!selectedClass) return;
+
+        const preset = CLASS_PRESETS[selectedClass];
+        Object.assign(stats, preset);
+        updateDisplay();
+
+        gsap.from(".stat-value", {
+          duration: 0.5,
+          scale: 1.2,
+          stagger: 0.1,
+          ease: "back.out",
+        });
+      }
+
+      function toggleTheme() {
+        const body = document.documentElement;
+        const isDark = body.getAttribute("data-theme") === "dark";
+        body.setAttribute("data-theme", isDark ? "light" : "dark");
+
+        document.getElementById("themeToggle").checked = !isDark;
+
+        gsap.to("body", {
+          backgroundColor: getComputedStyle(document.body).getPropertyValue(
+            "--bg"
+          ),
+          duration: 0.3,
+        });
+
+        if (statChart) {
+          statChart.destroy();
+          initializeChart();
+          updateChart();
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .getElementById("themeToggle")
+          .addEventListener("change", (e) => {
+            const body = document.documentElement;
+            body.setAttribute(
+              "data-theme",
+              e.target.checked ? "dark" : "light"
+            );
+
+            gsap.to("body", {
+              backgroundColor: getComputedStyle(document.body).getPropertyValue(
+                "--bg"
+              ),
+              duration: 0.3,
+            });
+
+            if (statChart) {
+              statChart.destroy();
+              initializeChart();
+              updateChart();
+            }
+          });
+      });
+
+      document.addEventListener("DOMContentLoaded", init);
+
+      function resetStats() {
+        stats = {
+          str: 8,
+          dex: 8,
+          con: 8,
+          int: 8,
+          wis: 8,
+          cha: 8,
+        };
+        totalPoints = 27;
+        document.getElementById("classSelect").value = "";
+        updateDisplay();
+
+        const elements = document.querySelectorAll(".stat-value");
+        elements.forEach((element) => {
+          element.classList.remove("pop-in", "pop-out");
+          void element.offsetWidth;
+          element.classList.add("pop-out");
+          element.addEventListener(
+            "animationend",
+            () => {
+              element.classList.remove("pop-out");
+            },
+            { once: true }
+          );
+        });
+
+        // reenable all increase buttons since we have full points
+        STATS.forEach((stat) => {
+          const increaseButton = document.getElementById(`${stat}-increase`);
+          if (increaseButton) {
+            increaseButton.disabled = false;
+          }
+        });
+      }
     </script>
   </body>
 </html>
